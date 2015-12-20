@@ -1,0 +1,22 @@
+{
+  "name": "made-pack-style",
+  "version": "0.2.0",
+  "description": "made pack style",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simonhao/made-pack-style.git"
+  },
+  "author": "simonhao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/simonhao/made-pack-style/issues"
+  },
+  "homepage": "https://github.com/simonhao/made-pack-style#readme",
+  "dependencies": {
+    "made-style": "^0.3.0"
+  }
+}
