@@ -6,41 +6,45 @@
 
 'use strict';
 
-var mstyle = require('made-style');
-var path   = require('path');
+var compile = require('made-style');
+var mid     = require('made-id');
+var path    = require('path');
 
-function build_import_ast(id){
-  return {
-    type: 'import',
-    once: true,
-    id: id
-  };
-}
+module.exports = function(options, func){
+  var require  = options.require || [];
+  var external = options.external || [];
+  var result   = [];
 
-function build_pack_ast(module_list){
-  var ast = {
-    type: 'stylesheet',
-    rule:[]
-  };
-
-  var module_list = module_list || [];
-
-  module_list.forEach(function(module_id){
-    ast.rule.push(build_import_ast(module_id));
+  external = external.map(function(module_id){
+    if(path.isAbsolute(module_id)){
+      return module_id;
+    }else{
+      return mid.path(module_id, options);
+    }
   });
 
-  return ast;
-}
+  require = require.map(function(module_id){
+    if(path.isAbsolute(module_id)){
+      return module_id;
+    }else{
+      return mid.path(module_id, options);
+    }
+  });
 
-module.exports = function(options, done){
-  var module_list = options.require || [];
-  var func_list = options.transform || {};
+  require = require.filter(function(module_path){
+    return external.indexOf(module_path) < 0;
+  });
 
-  var result = mstyle.compile_ast(build_pack_ast(module_list), {
-    basedir: options.basedir,
-    filename: options.filename || '',
-    external: options.external || []
-  }, func_list);
+  external = external.concat(require);
 
-  done(result);
+  result = require.map(function(module_path){
+    return compile.compile_file(module_path, {
+      basedir: options.basedir,
+      entry: options.entry,
+      ext: options.ext,
+      external: external
+    }, func);
+  });
+
+  return result.join('\n');
 };
