@@ -1,6 +1,6 @@
 {
   "name": "made-pack-style",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "made pack style",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/simonhao/made-pack-style#readme",
   "dependencies": {
-    "made-style": "^0.4.0"
+    "made-style": "^0.4.1"
   }
 }
