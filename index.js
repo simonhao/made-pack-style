@@ -10,24 +10,50 @@ var compile = require('made-style');
 var mid     = require('made-id');
 var path    = require('path');
 
-module.exports = function(options, func){
-  var require  = options.require || [];
-  var external = options.external || [];
-  var result   = [];
+module.exports = function(config, func){
+  var options = {
+    basedir: config.basedir || process.cwd(),
+    entry: config.entry || 'style.css',
+    ext: config.ext || '.css',
+    filename: process.cwd()
+  };
 
-  external = external.map(function(module_id){
+  var _require = config.require || [],
+      _external = config.external || [];
+
+  var require  = [],
+      external = [],
+      result   = [];
+
+  _external.forEach(function(module_id){
+    var module_path;
+
     if(path.isAbsolute(module_id)){
-      return module_id;
+      module_path = module_id;
     }else{
-      return mid.path(module_id, options);
+      module_path = mid.path(module_id, options);
+    }
+
+    if(module_path){
+      external.push(module_path);
+    }else{
+      console.error('Cont find external module "', module_id, '"');
     }
   });
 
-  require = require.map(function(module_id){
+  _require.forEach(function(module_id){
+    var module_path;
+
     if(path.isAbsolute(module_id)){
-      return module_id;
+      module_path = module_id;
     }else{
-      return mid.path(module_id, options);
+      module_path = mid.path(module_id, options);
+    }
+
+    if(module_path){
+      require.push(module_path);
+    }else{
+      console.error('Cont find require module "', module_id, '"');
     }
   });
 
